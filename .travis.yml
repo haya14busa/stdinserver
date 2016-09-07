@@ -1,0 +1,39 @@
+language: go
+
+go:
+  - 1.7
+  - tip
+
+os:
+  - linux
+
+script:
+  - go test -v -race ./...
+
+before_deploy:
+  - go get github.com/mitchellh/gox
+  - gox -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" .
+
+deploy:
+  provider: releases
+  api_key:
+    secure: k2EP3h8EX47NwJEYc4EbBcSAj0fK7SpQxs1YvTwf4WweEHuaeDMJmGifytIhvNSh52UzhSIyO8iqpzjgeWGpuYaNSNVE20qIebt2kNIgy/c+adF5Bm206dWxZqMNMrJpxemyK9FKhxh5Mch9mXUapaZcxPVh8748g7p0lGxPBhEpWBo/h4TVKfyFHRbP8nKIXSBRAKirEhQkCwXZGR9yJeWVcwhULeRrgmcbliWUeGr7dsZ9DjPBK7UU8/+jL/OlHEMsf/A/feXD4rvCF12F56OUMdoYrxbNICPexRs4FlJ7/YtjTzrPmiCvnmR6699PHjRqtHoKzDfsuo19F6FcBB3MPaCiVWyhVlrFs0RMjy7iIrSDVwrABztvj2escqYvAq49YSCSgZjyNO/McSKs1mkOhEEQeOfkavQFahTJGilr+LFJYYv68jJV8uhGMOxpB7OVopVtESVMbBT+UOwj+Jh7RWfVsFJEvpvlKi4WztNOlguJSwDZaiHrWwpRrMzbmnZc3w7sz2IrT4DjaVVZx+7cCeR9I2uFipw+myQNe4uYOIVO3lEKoq4RDexB85zDoPWFioIxqtiN6zA/rRR1j587EjvAEkvWEVu+kYJO9MFlYQKUnvJtD8DOQ39XPXvczYm1fBV4suAzWI9elnJZSfYrNd90m5z2Eq6us4XCe7o=
+  file:
+    - dist/stdinserver_darwin_386
+    - dist/stdinserver_darwin_amd64
+    - dist/stdinserver_freebsd_386
+    - dist/stdinserver_freebsd_amd64
+    - dist/stdinserver_freebsd_arm
+    - dist/stdinserver_linux_386
+    - dist/stdinserver_linux_amd64
+    - dist/stdinserver_linux_arm
+    - dist/stdinserver_netbsd_386
+    - dist/stdinserver_netbsd_amd64
+    - dist/stdinserver_netbsd_arm
+    - dist/stdinserver_openbsd_386
+    - dist/stdinserver_openbsd_amd64
+    - dist/stdinserver_windows_386.exe
+    - dist/stdinserver_windows_amd64.exe
+  skip_cleanup: true
+  on:
+    tags: true

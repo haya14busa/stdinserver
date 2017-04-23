@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +13,10 @@ import (
 )
 
 func main() {
+	var port int
+	flag.IntVar(&port, "port", 0, "port to listen on")
+	flag.Parse()
+
 	html, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatal(err)
@@ -21,7 +26,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	port := ln.Addr().(*net.TCPAddr).Port
+	if port == 0 {
+		port = ln.Addr().(*net.TCPAddr).Port
+	}
 	url := fmt.Sprintf("http://localhost:%v", port)
 
 	mux := http.NewServeMux()
@@ -31,5 +38,6 @@ func main() {
 
 	go openbrowser.WaitAndStart(url)
 
+	fmt.Printf("Open %v", url)
 	log.Fatal(http.Serve(ln, mux))
 }
